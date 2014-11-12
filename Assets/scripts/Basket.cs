@@ -3,9 +3,11 @@ using System.Collections;
 
 public class Basket : MonoBehaviour {
 
+	public GUIText			scoreGT;
+
 	// Use this for initialization
 	void Start () {
-	
+		StartScore();
 	}
 	
 	// Update is called once per frame
@@ -26,11 +28,36 @@ public class Basket : MonoBehaviour {
 	
 	}
 
+	void StartScore() {
+		//Find a reference to the ScoreCounter GameObject
+		GameObject scoreGO = GameObject.Find ("ScoreCounter");
+
+		//Get the GUIText Component of that GameObject
+		scoreGT = scoreGO.GetComponent<GUIText>();
+
+		//Set the starting number of points to 0
+		scoreGT.text = "0";
+	}
+
 	void OnCollisionEnter(Collision coll){
 		//Find out what hit this basket
 		GameObject collideWith = coll.gameObject;
 		if(collideWith.tag == "Apple"){
 			Destroy (collideWith);
+		}
+
+		//Parse the text of the scoreGT into an int
+		int score = int.Parse (scoreGT.text);
+
+		//Add Points for catching the apple
+		score += 100;
+
+		//Convert the score back to a string and display it
+		scoreGT.text = score.ToString();
+
+		//Track the High Score
+		if (score > HighScore.score) {
+			HighScore.score = score;
 		}
 	}
 }
